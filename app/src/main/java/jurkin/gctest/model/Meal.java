@@ -23,6 +23,8 @@ public class Meal extends RealmObject implements Parcelable {
 
     private String description;
 
+    private ServingSize servingSize;
+
     public Meal() {
 
     }
@@ -43,6 +45,14 @@ public class Meal extends RealmObject implements Parcelable {
         return description;
     }
 
+    public String getPrice() {
+        return "€" + this.servingSize.getPrice();
+    }
+
+    public String getServingSize() {
+        return this.servingSize.getSize();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -54,6 +64,7 @@ public class Meal extends RealmObject implements Parcelable {
         dest.writeParcelable(this.category, flags);
         dest.writeString(this.name);
         dest.writeString(this.description);
+        dest.writeParcelable(this.servingSize, flags);
     }
 
     protected Meal(Parcel in) {
@@ -61,9 +72,10 @@ public class Meal extends RealmObject implements Parcelable {
         this.category = in.readParcelable(MealCategory.class.getClassLoader());
         this.name = in.readString();
         this.description = in.readString();
+        this.servingSize = in.readParcelable(ServingSize.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<Meal> CREATOR = new Parcelable.Creator<Meal>() {
+    public static final Creator<Meal> CREATOR = new Creator<Meal>() {
         @Override
         public Meal createFromParcel(Parcel source) {
             return new Meal(source);

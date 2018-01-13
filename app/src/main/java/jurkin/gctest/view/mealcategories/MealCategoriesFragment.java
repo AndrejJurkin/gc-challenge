@@ -1,9 +1,11 @@
 package jurkin.gctest.view.mealcategories;
 
 import android.arch.lifecycle.ViewModel;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import jurkin.gctest.R;
 import jurkin.gctest.base.BaseFragment;
 
@@ -44,17 +47,27 @@ public class MealCategoriesFragment extends BaseFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         this.viewModel.getMealCategories()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mealCategories -> {
                     final MealCategoriesAdapter adapter = new MealCategoriesAdapter(mealCategories);
                     final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-                    recyclerView.setLayoutManager(layoutManager);
+                    layoutManager.setAutoMeasureEnabled(false);
                     recyclerView.setAdapter(adapter);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(layoutManager);
                 }, throwable -> {
                     //TODO: Show error view
                     Log.e(TAG, "Failed to get meal categories", throwable);
                 });
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 }

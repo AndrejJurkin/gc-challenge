@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingStart="@dimen/space_large"
+    android:paddingTop="@dimen/space_small"
+    android:paddingBottom="@dimen/space_small"
+    android:paddingEnd="@dimen/space_large"
+    android:orientation="horizontal">
+
     <TextView
         android:id="@+id/meal_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        tools:text="Meal Name" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            tools:text="$20" />
+
+        <TextView
+            android:id="@+id/serving_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="250g"/>
+    </LinearLayout>
 </LinearLayout>

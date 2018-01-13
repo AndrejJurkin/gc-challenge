@@ -1,17 +1,22 @@
 package jurkin.gctest.view.mealcategories;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,8 +30,12 @@ import jurkin.gctest.model.MealCategory;
 
 public class MealCategoriesAdapter extends ExpandableRecyclerViewAdapter
         <MealCategoriesAdapter.MealCategoryHolder, MealCategoriesAdapter.MealViewHolder> {
+    private static final String TAG = "MealCategoriesAdapter";
 
-    public MealCategoriesAdapter(List<MealCategory> categories) {
+    @Nullable
+    private ExpandableGroup currentExpandedGroup = null;
+
+    MealCategoriesAdapter(List<MealCategory> categories) {
         super(createCategoryGroups(categories));
     }
 
@@ -49,12 +58,36 @@ public class MealCategoriesAdapter extends ExpandableRecyclerViewAdapter
                                       ExpandableGroup group, int childIndex) {
         final Meal meal = (Meal) group.getItems().get(childIndex);
         holder.mealName.setText(meal.getName());
+        holder.price.setText(meal.getPrice());
+        holder.servingSize.setText(meal.getServingSize());
     }
 
     @Override
     public void onBindGroupViewHolder(MealCategoryHolder holder, int flatPosition,
                                       ExpandableGroup group) {
         holder.categoryName.setText(group.getTitle());
+        holder.setExpanded(isGroupExpanded(flatPosition));
+    }
+
+    @Override
+    public boolean onGroupClick(int flatPos) {
+        int groupPosition = expandableList.getUnflattenedPosition(flatPos).groupPos;
+        boolean collapsed = super.onGroupClick(flatPos);
+
+        if (!collapsed && currentExpandedGroup != null) {
+            toggleGroup(currentExpandedGroup);
+        }
+        notifyItemChanged(flatPos);
+        currentExpandedGroup = collapsed ? null : getGroups().get(groupPosition);
+        return collapsed;
+    }
+
+    @Override
+    public boolean toggleGroup(ExpandableGroup group) {
+        boolean collapsed = super.toggleGroup(group);
+        int index = expandableList.getFlattenedGroupIndex(group);
+        notifyItemChanged(index);
+        return collapsed;
     }
 
     private static List<MealCategoryGroup> createCategoryGroups(List<MealCategory> mealCategories) {
@@ -81,15 +114,32 @@ public class MealCategoriesAdapter extends ExpandableRecyclerViewAdapter
         @BindView(R.id.category_name)
         TextView categoryName;
 
+        @BindView(R.id.arrow_icon)
+        ImageView arrowIcon;
+
         MealCategoryHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        void setExpanded(boolean expanded) {
+            if (expanded) {
+                arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+            } else {
+                arrowIcon.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+            }
         }
     }
 
     static class MealViewHolder extends ChildViewHolder {
         @BindView(R.id.meal_name)
         TextView mealName;
+
+        @BindView(R.id.price)
+        TextView price;
+
+        @BindView(R.id.serving_size)
+        TextView servingSize;
 
         MealViewHolder(View itemView) {
             super(itemView);

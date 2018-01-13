@@ -65,7 +65,7 @@ public class ApiModule {
     @Singleton
     HttpLoggingInterceptor provideHttpLoggingInterceptor() {
         final HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         return httpLoggingInterceptor;
     }
 
