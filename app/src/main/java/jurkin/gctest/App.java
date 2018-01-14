@@ -12,6 +12,7 @@ import dagger.android.HasActivityInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import jurkin.gctest.data.Repository;
 import jurkin.gctest.injection.component.DaggerAppComponent;
 import jurkin.gctest.injection.module.ApiModule;
 import jurkin.gctest.injection.module.AppModule;
@@ -30,6 +31,9 @@ public class App extends Application implements HasActivityInjector, HasSupportF
     @Inject
     DispatchingAndroidInjector<Fragment> dispatchingFragmentInjector;
 
+    @Inject
+    Repository repository;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,6 +48,8 @@ public class App extends Application implements HasActivityInjector, HasSupportF
                 .apiModule(new ApiModule(BASE_URL))
                 .build()
                 .inject(this);
+
+        repository.refreshLocalData();
     }
 
     @Override

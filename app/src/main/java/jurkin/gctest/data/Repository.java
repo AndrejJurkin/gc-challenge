@@ -38,13 +38,7 @@ public class Repository {
      * @return Observable list of {@link Meal}
      */
     public Flowable<RealmResults<Meal>> getMealsWithRefresh() {
-        this.remote.getMeals()
-                .doOnNext(meals -> {
-                    // Cache to the local data source
-                    this.local.insertMeals(meals);
-                })
-                .subscribe();
-
+        refreshMeals();
         return getMeals();
     }
 
@@ -66,13 +60,7 @@ public class Repository {
      * @return Observable Realm results of {@link MealCategory}
      */
     public Flowable<RealmResults<MealCategory>> getMealCategoriesWithRefresh() {
-        this.remote.getMealCategories()
-                .doOnNext(mealCategories -> {
-                    // Cache to the local data source
-                    this.local.insertMealCategories(mealCategories);
-                })
-                .subscribe();
-
+        refreshMealCategories();
         return getMealCategories();
     }
 
@@ -83,6 +71,58 @@ public class Repository {
      */
     public Flowable<RealmResults<MealCategory>> getMealCategories() {
         return this.local.getCategories();
+    }
+
+    /**
+     * Get meals from the remote data source and cache it to the local database
+     *
+     * Note this is just a DUMMY implementation, we would handle this more precisely within
+     * the production environment (handle exceptions, retry mechanism etc.)
+     */
+    public void refreshMeals() {
+        this.remote.getMeals()
+                .doOnNext(meals -> {
+                    // Cache to the local data source
+                    this.local.insertMeals(meals);
+                })
+                .subscribe();
+    }
+
+    /**
+     * Get meal categories from the remote data source and cache it to the local database
+     */
+    public void refreshMealCategories() {
+        this.remote.getMealCategories()
+                .doOnNext(mealCategories -> {
+                    // Cache to the local data source
+                    this.local.insertMealCategories(mealCategories);
+                })
+                .subscribe();
+    }
+
+    /**
+     * Get addons from the remote data source and cache it to the local database
+     */
+    public void refreshAddOns() {
+        this.remote.getAddOns()
+                .doOnNext(addOns -> this.local.insertAddOns(addOns))
+                .subscribe();
+    }
+
+    /**
+     * Get addon categories from the remote data source and cache it to the local databse
+     */
+    public void refreshAddOnCategories() {
+        this.remote.getAddOnCategories()
+                .doOnNext(addOnCategories -> this.local.insertAddOnCategories(addOnCategories))
+                .subscribe();
+    }
+
+    public void refreshLocalData() {
+        refreshMeals();
+        refreshMealCategories();
+        refreshAddOnCategories();
+        refreshAddOns();
     }
 }
 

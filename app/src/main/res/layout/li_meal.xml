@@ -7,6 +7,9 @@
     android:paddingTop="@dimen/space_small"
     android:paddingBottom="@dimen/space_small"
     android:paddingEnd="@dimen/space_large"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
     android:orientation="horizontal">
 
     <TextView

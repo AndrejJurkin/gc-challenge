@@ -7,7 +7,10 @@ import javax.inject.Singleton;
 
 import io.reactivex.Flowable;
 import io.realm.Realm;
+import io.realm.RealmObject;
 import io.realm.RealmResults;
+import jurkin.gctest.model.AddOn;
+import jurkin.gctest.model.AddOnCategory;
 import jurkin.gctest.model.Meal;
 import jurkin.gctest.model.MealCategory;
 
@@ -24,35 +27,50 @@ public class LocalDataSource {
     }
 
     public Flowable<RealmResults<Meal>> getMeals() {
-        Realm realm = Realm.getDefaultInstance();
-        return realm.where(Meal.class)
-                .findAllAsync()
-                .asFlowable()
-                .filter(RealmResults::isLoaded)
-                .doOnComplete(realm::close);
+        return getDataAsFlowable(Meal.class);
     }
 
     public void insertMeals(List<Meal> meals) {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            realm.beginTransaction();
-            realm.insertOrUpdate(meals);
-            realm.beginTransaction();
-        }
+        insertOrUpdate(meals);
     }
 
     public Flowable<RealmResults<MealCategory>> getCategories() {
+        return getDataAsFlowable(MealCategory.class);
+    }
+
+    public void insertMealCategories(List<MealCategory> mealCategories) {
+        insertOrUpdate(mealCategories);
+    }
+
+    public Flowable<RealmResults<AddOn>> getAddOns() {
+        return getDataAsFlowable(AddOn.class);
+    }
+
+    public void insertAddOns(List<AddOn> addOns) {
+        insertOrUpdate(addOns);
+    }
+
+    public Flowable<RealmResults<AddOnCategory>> getAddOnCategories() {
+        return getDataAsFlowable(AddOnCategory.class);
+    }
+
+    public void insertAddOnCategories(List<AddOnCategory> addOnCategories) {
+        insertOrUpdate(addOnCategories);
+    }
+
+    private <T extends RealmObject> Flowable<RealmResults<T>> getDataAsFlowable(Class<T> dataClass) {
         Realm realm = Realm.getDefaultInstance();
-        return realm.where(MealCategory.class)
+        return realm.where(dataClass)
                 .findAllAsync()
                 .asFlowable()
                 .filter(RealmResults::isLoaded)
                 .doOnComplete(realm::close);
     }
 
-    public void insertMealCategories(List<MealCategory> mealCategories) {
+    private <T extends RealmObject> void insertOrUpdate(List<T> data) {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.beginTransaction();
-            realm.insertOrUpdate(mealCategories);
+            realm.insertOrUpdate(data);
             realm.commitTransaction();
         }
     }

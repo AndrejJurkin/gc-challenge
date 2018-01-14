@@ -1,6 +1,7 @@
 package jurkin.gctest.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Andrej Jurkin on 1/11/18.
@@ -8,6 +9,7 @@ import io.realm.RealmObject;
 
 public class AddOn extends RealmObject {
 
+    @PrimaryKey
     private String id;
 
     private AddOnCategory category;

@@ -7,6 +7,8 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import jurkin.gctest.api.MenuService;
+import jurkin.gctest.model.AddOn;
+import jurkin.gctest.model.AddOnCategory;
 import jurkin.gctest.model.Meal;
 import jurkin.gctest.model.MealCategory;
 
@@ -19,7 +21,7 @@ public class RemoteDataSource {
     private MenuService service;
 
     @Inject
-    public RemoteDataSource(MenuService service) {
+    RemoteDataSource(MenuService service) {
         this.service = service;
     }
 
@@ -31,5 +33,15 @@ public class RemoteDataSource {
     public Observable<List<MealCategory>> getMealCategories() {
         return this.service.getMealCategories()
                 .flatMap(response -> Observable.just(response.getMealCategories()));
+    }
+
+    public Observable<List<AddOn>> getAddOns() {
+        return this.service.getAddons()
+                .flatMap(response -> Observable.just(response.getAddOns()));
+    }
+
+    public Observable<List<AddOnCategory>> getAddOnCategories() {
+        return this.service.getAddonCategories()
+                .flatMap(response -> Observable.just(response.getAddOnCategories()));
     }
 }

@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/expansion_panel_height"
     android:orientation="horizontal"
+    android:gravity="center_vertical"
     android:clickable="true"
     android:focusable="true"
-    android:gravity="center_vertical"
     android:foreground="?attr/selectableItemBackground"
     xmlns:tools="http://schemas.android.com/tools">
 

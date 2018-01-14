@@ -25,6 +25,6 @@ public class MealCategoriesViewModel extends ViewModel {
     }
 
     public Flowable<RealmResults<MealCategory>> getMealCategories() {
-        return repository.getMealCategoriesWithRefresh();
+        return repository.getMealCategories();
     }
 }
