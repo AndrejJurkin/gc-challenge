@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
+import jurkin.gctest.view.addons.AddOnViewModel;
 import jurkin.gctest.view.mealcategories.MealCategoriesViewModel;
 
 /**
@@ -18,5 +19,10 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MealCategoriesViewModel.class)
     abstract ViewModel bindMealCategoriesViewModel(MealCategoriesViewModel mealCategoriesViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddOnViewModel.class)
+    abstract ViewModel bindAddOnViewModel(AddOnViewModel addOnViewModel);
 }
 

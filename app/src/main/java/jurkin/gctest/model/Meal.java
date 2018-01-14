@@ -25,6 +25,8 @@ public class Meal extends RealmObject implements Parcelable {
 
     private ServingSize servingSize;
 
+    private RealmList<String> addOnIds;
+
     public Meal() {
 
     }
@@ -51,6 +53,10 @@ public class Meal extends RealmObject implements Parcelable {
 
     public String getServingSize() {
         return this.servingSize.getSize();
+    }
+
+    public RealmList<String> getAddOnIds() {
+        return addOnIds;
     }
 
     @Override

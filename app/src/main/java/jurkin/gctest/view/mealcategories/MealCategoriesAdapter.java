@@ -1,6 +1,5 @@
 package jurkin.gctest.view.mealcategories;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.TextView;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
-import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
@@ -30,10 +28,12 @@ import jurkin.gctest.model.MealCategory;
 
 public class MealCategoriesAdapter extends ExpandableRecyclerViewAdapter
         <MealCategoriesAdapter.MealCategoryHolder, MealCategoriesAdapter.MealViewHolder> {
-    private static final String TAG = "MealCategoriesAdapter";
 
     @Nullable
     private ExpandableGroup currentExpandedGroup = null;
+
+    @Nullable
+    private OnMealClickListener onMealClickListener;
 
     MealCategoriesAdapter(List<MealCategory> categories) {
         super(createCategoryGroups(categories));
@@ -60,6 +60,11 @@ public class MealCategoriesAdapter extends ExpandableRecyclerViewAdapter
         holder.mealName.setText(meal.getName());
         holder.price.setText(meal.getPrice());
         holder.servingSize.setText(meal.getServingSize());
+        holder.itemView.setOnClickListener(v -> {
+            if (onMealClickListener != null) {
+                onMealClickListener.onMealClick(meal);
+            }
+        });
     }
 
     @Override
@@ -88,6 +93,10 @@ public class MealCategoriesAdapter extends ExpandableRecyclerViewAdapter
         int index = expandableList.getFlattenedGroupIndex(group);
         notifyItemChanged(index);
         return collapsed;
+    }
+
+    public void setOnMealClickListener(@Nullable OnMealClickListener listener) {
+        this.onMealClickListener = listener;
     }
 
     private static List<MealCategoryGroup> createCategoryGroups(List<MealCategory> mealCategories) {
@@ -145,5 +154,10 @@ public class MealCategoriesAdapter extends ExpandableRecyclerViewAdapter
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    interface OnMealClickListener {
+
+        void onMealClick(Meal meal);
     }
 }

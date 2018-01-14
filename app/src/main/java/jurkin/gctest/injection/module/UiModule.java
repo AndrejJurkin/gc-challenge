@@ -7,6 +7,8 @@ import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import jurkin.gctest.MainActivity;
 import jurkin.gctest.injection.ViewModelFactory;
+import jurkin.gctest.view.addons.AddOnActivity;
+import jurkin.gctest.view.addons.AddOnFragment;
 import jurkin.gctest.view.mealcategories.MealCategoriesFragment;
 
 /**
@@ -23,6 +25,12 @@ public abstract class UiModule {
 
     @ContributesAndroidInjector
     abstract MealCategoriesFragment contributeMealCategoriesFragment();
+
+    @ContributesAndroidInjector
+    abstract AddOnActivity contributeAddOnActivity();
+
+    @ContributesAndroidInjector
+    abstract AddOnFragment contributeAddOnFragment();
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(ViewModelFactory factory);

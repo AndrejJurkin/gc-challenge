@@ -16,8 +16,10 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import jurkin.gctest.R;
 import jurkin.gctest.base.BaseFragment;
+import jurkin.gctest.view.addons.AddOnActivity;
 
 /**
  * Created by Andrej Jurkin on 1/11/18.
@@ -30,6 +32,11 @@ public class MealCategoriesFragment extends BaseFragment {
     RecyclerView recyclerView;
 
     private MealCategoriesViewModel viewModel;
+
+    private Bundle instanceState;
+
+    @Nullable
+    private MealCategoriesAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,27 +54,40 @@ public class MealCategoriesFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        this.viewModel.getMealCategories()
+    public void onStart() {
+        super.onStart();
+        Disposable subscription = this.viewModel.getMealCategories()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mealCategories -> {
-                    final MealCategoriesAdapter adapter = new MealCategoriesAdapter(mealCategories);
                     final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                     layoutManager.setAutoMeasureEnabled(false);
+                    adapter = new MealCategoriesAdapter(mealCategories);
                     recyclerView.setAdapter(adapter);
                     recyclerView.setHasFixedSize(true);
                     recyclerView.setLayoutManager(layoutManager);
+                    adapter.setOnMealClickListener(meal ->
+                            AddOnActivity.startActivity(getActivity(), meal));
+                    adapter.onRestoreInstanceState(instanceState);
                 }, throwable -> {
                     //TODO: Show error view
                     Log.e(TAG, "Failed to get meal categories", throwable);
                 });
-
+        disposables.add(subscription);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        this.instanceState = savedInstanceState;
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (adapter != null) {
+            adapter.onSaveInstanceState(outState);
+        }
+    }
+
 }
