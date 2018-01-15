@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">GC Test</string>
-    <string name="prilohy">Prilohy</string>
+    <string name="addons">Prilohy</string>
+    <string name="error_empty_addons">Pre vybrany produkt nie su dostupne ziadne prilohy.</string>
 </resources>

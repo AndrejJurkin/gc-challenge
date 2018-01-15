@@ -27,6 +27,6 @@ public class AddOnActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addon);
         showBackButton();
-        setTitle(getString(R.string.prilohy));
+        setTitle(getString(R.string.addons));
     }
 }

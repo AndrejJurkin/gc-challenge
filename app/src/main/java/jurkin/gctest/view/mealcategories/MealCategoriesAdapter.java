@@ -1,5 +1,6 @@
 package jurkin.gctest.view.mealcategories;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,7 +96,7 @@ public class MealCategoriesAdapter extends ExpandableRecyclerViewAdapter
         return collapsed;
     }
 
-    public void setOnMealClickListener(@Nullable OnMealClickListener listener) {
+    void setOnMealClickListener(@Nullable OnMealClickListener listener) {
         this.onMealClickListener = listener;
     }
 
@@ -109,7 +110,6 @@ public class MealCategoriesAdapter extends ExpandableRecyclerViewAdapter
         for (MealCategory category : mealCategories) {
             groups.add(new MealCategoryGroup(category.getName(), category.getMeals()));
         }
-
         return groups;
     }
 

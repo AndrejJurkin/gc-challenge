@@ -7,6 +7,7 @@ import io.reactivex.Flowable;
 import io.realm.RealmResults;
 import jurkin.gctest.data.local.LocalDataSource;
 import jurkin.gctest.data.remote.RemoteDataSource;
+import jurkin.gctest.model.AddOn;
 import jurkin.gctest.model.Meal;
 import jurkin.gctest.model.MealCategory;
 
@@ -71,6 +72,15 @@ public class Repository {
      */
     public Flowable<RealmResults<MealCategory>> getMealCategories() {
         return this.local.getCategories();
+    }
+
+    /**
+     * Get available addons for the meal with the given id
+     * @param mealId
+     * @return Observable realm results of @{@link AddOn}
+     */
+    public Flowable<RealmResults<AddOn>> getAddOns(String mealId) {
+        return local.getAddOns(mealId);
     }
 
     /**
